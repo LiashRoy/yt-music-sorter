@@ -630,6 +630,7 @@ button {
   .sidebar-title {
     margin-bottom: 0;
     min-width: max-content;
+    flex-shrink: 0;
   }
 
   .playlist-container {
@@ -638,7 +639,12 @@ button {
     overflow-x: auto;
     flex: 1;
     min-width: 0;
-    padding-bottom: 8px; /* Prevents scrollbar from clipping emojis */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .playlist-container::-webkit-scrollbar {
+    display: none;
   }
 
   .playlist-item {
