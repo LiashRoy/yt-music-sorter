@@ -659,10 +659,8 @@ button {
     display: none;
   }
 
-  .mobile-player-spacer {
-    height: 90px;
-    width: 100%;
-    flex-shrink: 0;
+  .main-content.has-player {
+    padding-bottom: 64px; /* Shrinks the content box so it ends cleanly above the fixed player */
   }
 
   .player-modal {

@@ -306,7 +306,7 @@ function App() {
         </button>
       </header>
 
-      <div className="main-content">
+      <div className={`main-content ${playingSong ? 'has-player' : ''}`}>
         {/* Left Column */}
         <div className="left-column">
           {/* Sidebar */}
@@ -502,7 +502,6 @@ function App() {
                       </motion.div>
                     ))}
                   </AnimatePresence>
-                  <div className="mobile-player-spacer" />
                 </div>
               )}
             </>
