@@ -153,6 +153,8 @@ button {
   flex-direction: column;
   gap: 1.5rem;
   overflow-y: auto;
+  height: fit-content;
+  max-height: 100%;
 }
 
 /* Playlist Item */
