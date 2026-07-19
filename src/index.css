@@ -659,8 +659,8 @@ button {
     display: none;
   }
 
-  .main-content.has-player {
-    padding-bottom: 64px; /* Shrinks the content box so it ends cleanly above the fixed player */
+  .main-content.has-player .content-area {
+    margin-bottom: 80px !important; /* Forces the glass panel box to physically end above the fixed player */
   }
 
   .player-modal {
