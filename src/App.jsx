@@ -367,19 +367,19 @@ function App() {
                   {/* High Quality Thumbnail */}
                   <img 
                     draggable={false}
+                    className="player-thumb"
                     src={`https://img.youtube.com/vi/${playingSong.videoId}/hqdefault.jpg`} 
                     alt={playingSong.title} 
-                    style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 8px 32px rgba(0, 240, 255, 0.2)', pointerEvents: 'none' }} 
                     onError={(e) => e.target.src = playingSong.thumbnail}
                   />
                   
-                  <div style={{ textAlign: 'center', width: '100%', marginTop: '4px' }}>
-                    <h4 style={{ margin: 0, fontSize: '1.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{playingSong.title}</h4>
-                    <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{playingSong.artist}</p>
+                  <div className="player-info">
+                    <h4>{playingSong.title}</h4>
+                    <p>{playingSong.artist}</p>
                   </div>
 
                   {/* Progress Bar */}
-                  <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+                  <div className="player-progress-container">
                     <input 
                       type="range" 
                       min={0} 
@@ -399,7 +399,7 @@ function App() {
                       className="progress-bar"
                       style={{ background: `linear-gradient(to right, var(--accent-color) ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.1) ${(currentTime / (duration || 1)) * 100}%)` }}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: 500 }}>
+                    <div className="time-display">
                       <span>{formatTime(currentTime)}</span>
                       <span>{formatTime(duration)}</span>
                     </div>
@@ -409,7 +409,7 @@ function App() {
                     <button className="control-btn" onClick={playPrev} disabled={!hasPrev}>
                       <SkipBack size={24} />
                     </button>
-                    <button className="control-btn" onClick={togglePlay} style={{ width: '60px', height: '60px', background: 'var(--accent-gradient)', color: '#fff', border: 'none' }}>
+                    <button className="control-btn play-pause" onClick={togglePlay}>
                       {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" />}
                     </button>
                     <button className="control-btn" onClick={playNext} disabled={!hasNext}>

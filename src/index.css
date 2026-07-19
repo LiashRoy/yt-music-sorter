@@ -510,6 +510,63 @@ button {
   cursor: not-allowed;
 }
 
+.control-btn.play-pause {
+  width: 60px;
+  height: 60px;
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+}
+
+/* Player Internal Classes */
+.player-thumb {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 240, 255, 0.2);
+  pointer-events: none;
+}
+
+.player-info {
+  text-align: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.player-info h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-info p {
+  margin: 4px 0 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-progress-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
 /* Progress Bar */
 .progress-bar {
   -webkit-appearance: none;
@@ -604,9 +661,81 @@ button {
 
   .player-modal {
     position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    width: calc(100% - 2rem);
+    bottom: 0;
+    left: 0;
+    width: 100%;
     z-index: 2000;
+  }
+  
+  .player-content {
+    flex-direction: row;
+    padding: 8px 12px;
+    border-radius: 16px 16px 0 0;
+    gap: 12px;
+    border-bottom: none;
+    align-items: center;
+  }
+
+  .player-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+  }
+
+  .player-info {
+    text-align: left;
+    margin: 0;
+    flex: 1;
+    min-width: 0; /* needed for truncation in flex child */
+  }
+
+  .player-info h4 {
+    font-size: 0.95rem;
+  }
+
+  .player-info p {
+    font-size: 0.8rem;
+    margin-top: 2px;
+  }
+
+  .player-controls {
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .player-controls .control-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .player-controls .control-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .control-btn.play-pause {
+    width: 44px;
+    height: 44px;
+  }
+
+  .player-progress-container {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .player-progress-container .progress-bar {
+    height: 3px;
+    border-radius: 0;
+  }
+
+  .time-display {
+    display: none;
+  }
+  
+  .close-btn {
+    display: none;
   }
 }
