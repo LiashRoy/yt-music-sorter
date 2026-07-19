@@ -614,6 +614,7 @@ button {
     width: 100%;
     height: auto;
     flex-direction: column;
+    min-width: 0; /* Prevents flex blowout */
   }
 
   .sidebar {
@@ -622,6 +623,8 @@ button {
     padding: 1rem;
     align-items: center;
     gap: 1rem;
+    min-width: 0; /* Prevents flex blowout */
+    width: 100%;
   }
   
   .sidebar-title {
