@@ -245,11 +245,16 @@ button {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0; /* Forces grid to shrink below content size */
 }
 
 .track-artist {
   color: var(--text-secondary);
   font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0; /* Forces grid to shrink below content size */
 }
 
 .track-play {
