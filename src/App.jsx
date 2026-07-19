@@ -16,6 +16,9 @@ function App() {
   const [playingSong, setPlayingSong] = useState(null)
   const [player, setPlayer] = useState(null)
   const [isPlaying, setIsPlaying] = useState(true)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
 
   // Login handler
   const login = useGoogleLogin({
@@ -52,6 +55,27 @@ function App() {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  // Track Progress
+  useEffect(() => {
+    let interval;
+    if (isPlaying && player && !isDragging) {
+      interval = setInterval(() => {
+        if (player.getCurrentTime) {
+          setCurrentTime(player.getCurrentTime());
+          setDuration(player.getDuration());
+        }
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, player, isDragging]);
+
+  const formatTime = (timeInSeconds) => {
+    if (isNaN(timeInSeconds) || timeInSeconds === 0) return "0:00";
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
 
   // Fetch Playlists when token is available
   useEffect(() => {
@@ -384,8 +408,35 @@ function App() {
                 <h4 style={{ margin: 0, fontSize: '1.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{playingSong.title}</h4>
                 <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{playingSong.artist}</p>
               </div>
+
+              {/* Progress Bar */}
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+                <input 
+                  type="range" 
+                  min={0} 
+                  max={duration || 100} 
+                  value={currentTime}
+                  onMouseDown={() => setIsDragging(true)}
+                  onMouseUp={(e) => {
+                    setIsDragging(false);
+                    if (player) player.seekTo(parseFloat(e.target.value), true);
+                  }}
+                  onTouchStart={() => setIsDragging(true)}
+                  onTouchEnd={(e) => {
+                    setIsDragging(false);
+                    if (player) player.seekTo(parseFloat(e.target.value), true);
+                  }}
+                  onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+                  className="progress-bar"
+                  style={{ background: `linear-gradient(to right, var(--accent-color) ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.1) ${(currentTime / (duration || 1)) * 100}%)` }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: 500 }}>
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
               
-              <div className="player-controls" style={{ position: 'relative', bottom: 'auto', marginTop: '8px' }}>
+              <div className="player-controls" style={{ position: 'relative', bottom: 'auto', marginTop: '4px' }}>
                 <button className="control-btn" onClick={playPrev} disabled={!hasPrev}>
                   <SkipBack size={24} />
                 </button>
