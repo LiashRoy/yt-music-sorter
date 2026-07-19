@@ -182,6 +182,11 @@ function App() {
     .sort((a, b) => a.artist.localeCompare(b.artist))
 
   const handlePlaySong = (song) => {
+    if (playingSong && playingSong.videoId === song.videoId) {
+      togglePlay();
+      return;
+    }
+
     setPlayingSong(song)
     setIsPlaying(true)
     
@@ -456,7 +461,7 @@ function App() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.2 }}
-                        className="track-item"
+                        className={`track-item ${playingSong?.videoId === song.videoId ? 'playing' : ''}`}
                       >
                         {unplayableSongs.has(song.videoId) ? (
                           <a 
@@ -471,10 +476,14 @@ function App() {
                         ) : (
                           <button 
                             onClick={() => handlePlaySong(song)}
-                            className="track-play"
-                            title="Play in App"
+                            className={`track-play ${playingSong?.videoId === song.videoId ? 'active' : ''}`}
+                            title={playingSong?.videoId === song.videoId && isPlaying ? "Pause" : "Play in App"}
                           >
-                            <Play size={18} fill="currentColor" />
+                            {playingSong?.videoId === song.videoId && isPlaying ? (
+                              <Pause size={18} fill="currentColor" />
+                            ) : (
+                              <Play size={18} fill="currentColor" />
+                            )}
                           </button>
                         )}
                         <div className="track-number">{index + 1}</div>
