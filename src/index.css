@@ -673,6 +673,12 @@ button {
     z-index: 2000;
   }
   
+  .player-modal .glass-panel {
+    background: rgba(10, 15, 30, 0.92); /* More opaque to block background text */
+    backdrop-filter: blur(40px) saturate(200%);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6); /* Adds separation from the track list */
+  }
+  
   .player-content {
     flex-direction: row;
     padding: 8px 12px;
