@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Music, ListMusic, ArrowDownAZ, LogIn, ExternalLink, X } from 'lucide-react'
+import { Play, Music, ListMusic, ArrowDownAZ, LogIn, X, SkipBack, SkipForward, LogOut } from 'lucide-react'
 import './index.css'
 
 function App() {
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState(() => localStorage.getItem('yt_token'))
   const [playlists, setPlaylists] = useState([])
   const [selectedPlaylist, setSelectedPlaylist] = useState(null)
   const [songs, setSongs] = useState([])
@@ -16,10 +16,21 @@ function App() {
 
   // Login handler
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setToken(codeResponse.access_token),
+    onSuccess: (codeResponse) => {
+      setToken(codeResponse.access_token)
+      localStorage.setItem('yt_token', codeResponse.access_token)
+    },
     onError: (error) => console.log('Login Failed:', error),
     scope: 'https://www.googleapis.com/auth/youtube.readonly'
   })
+  
+  const logout = () => {
+    setToken(null)
+    localStorage.removeItem('yt_token')
+    setPlaylists([])
+    setSongs([])
+    setSelectedPlaylist(null)
+  }
 
   // Fetch Playlists when token is available
   useEffect(() => {
@@ -42,6 +53,10 @@ function App() {
       setPlaylists(response.data.items || [])
     } catch (error) {
       console.error("Error fetching playlists", error)
+      if (error.response && error.response.status === 401) {
+        // Token expired
+        logout()
+      }
     } finally {
       setLoading(false)
     }
@@ -96,6 +111,9 @@ function App() {
       setSongs(processedSongs)
     } catch (error) {
       console.error("Error fetching playlist items", error)
+      if (error.response && error.response.status === 401) {
+        logout()
+      }
     } finally {
       setLoading(false)
     }
@@ -111,9 +129,22 @@ function App() {
     if (isSortedAlphabetically) {
       return a.artist.localeCompare(b.artist)
     }
-    // Default YouTube playlist order
+  // Default YouTube playlist order
     return a.position - b.position
   })
+
+  // Player Controls Logic
+  const currentIndex = displayedSongs.findIndex(s => s.videoId === playingVideoId)
+  const hasNext = currentIndex >= 0 && currentIndex < displayedSongs.length - 1
+  const hasPrev = currentIndex > 0
+
+  const playNext = () => {
+    if (hasNext) setPlayingVideoId(displayedSongs[currentIndex + 1].videoId)
+  }
+
+  const playPrev = () => {
+    if (hasPrev) setPlayingVideoId(displayedSongs[currentIndex - 1].videoId)
+  }
 
   // Render Login Screen if not authenticated
   if (!token) {
@@ -144,9 +175,17 @@ function App() {
 
   return (
     <div className="app-container">
-      <header style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <Music size={32} className="gradient-text" />
-        <h2 className="gradient-text" style={{ margin: 0 }}>YT Music Sorter</h2>
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Music size={32} className="gradient-text" />
+          <h2 className="gradient-text" style={{ margin: 0 }}>YT Music Sorter</h2>
+        </div>
+        <button 
+          onClick={logout} 
+          style={{ background: 'transparent', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem' }}
+        >
+          <LogOut size={16} /> Logout
+        </button>
       </header>
 
       <div className="main-content">
@@ -275,6 +314,15 @@ function App() {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowFullScreen
               ></iframe>
+              
+              <div className="player-controls">
+                <button className="control-btn" onClick={playPrev} disabled={!hasPrev}>
+                  <SkipBack size={24} />
+                </button>
+                <button className="control-btn" onClick={playNext} disabled={!hasNext}>
+                  <SkipForward size={24} />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
