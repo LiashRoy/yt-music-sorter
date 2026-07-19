@@ -1,17 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-primary: #0f172a; /* Deep blue-gray */
-  --bg-secondary: #1e293b;
-  --bg-surface: rgba(30, 41, 59, 0.7);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --accent-color: #ec4899; /* Vibrant pink */
-  --accent-hover: #db2777;
-  --accent-gradient: linear-gradient(135deg, #ec4899, #8b5cf6); /* Pink to Purple */
-  --border-color: rgba(255, 255, 255, 0.1);
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.05);
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-surface: rgba(10, 10, 10, 0.7);
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --accent-color: #00f0ff; /* Neon blue */
+  --accent-hover: #00b8ff;
+  --accent-gradient: linear-gradient(135deg, #00f0ff, #0044ff); /* Neon blue to deep blue */
+  --border-color: rgba(0, 240, 255, 0.2);
+  
+  /* Liquid Glass Effect */
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(0, 240, 255, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.1);
 }
 
 * {
@@ -28,19 +31,25 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(236, 72, 153, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+    radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.1), transparent 30%),
+    radial-gradient(circle at 85% 30%, rgba(0, 68, 255, 0.1), transparent 30%);
   background-attachment: fixed;
 }
 
 /* Glassmorphism Utilities */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
   border: 1px solid var(--glass-border);
   border-radius: 24px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow);
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
 }
 
 .gradient-text {
@@ -82,16 +91,18 @@ button {
   border-radius: 12px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+  border-color: rgba(0, 240, 255, 0.8);
 }
 
 .btn-primary:active {
@@ -147,9 +158,10 @@ button {
 }
 
 .playlist-item.active {
-  background: rgba(236, 72, 153, 0.1);
+  background: rgba(0, 240, 255, 0.1);
   color: var(--accent-color);
   border-left: 4px solid var(--accent-color);
+  box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.05);
 }
 
 /* Content Area */
@@ -179,12 +191,12 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 240, 255, 0.2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 240, 255, 0.4);
 }
 
 /* Track Item */
@@ -224,7 +236,7 @@ button {
 
 .track-play {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 240, 255, 0.1);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -234,6 +246,7 @@ button {
   opacity: 0;
   transform: scale(0.8);
   transition: all 0.2s ease;
+  border: 1px solid rgba(0, 240, 255, 0.2);
 }
 
 .track-item:hover .track-play {
@@ -243,6 +256,8 @@ button {
 
 .track-play:hover {
   background: var(--accent-color);
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
   transform: scale(1.1) !important;
 }
 
@@ -325,21 +340,21 @@ button {
   position: absolute;
   top: -48px;
   right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--accent-color);
+  border: 1px solid rgba(0, 240, 255, 0.3);
   cursor: pointer;
   padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background 0.2s;
-  z-index: 10;
+  transition: all 0.2s;
 }
 
 .close-btn:hover {
-  background: rgba(236, 72, 153, 0.8);
+  background: rgba(0, 240, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
 }
 
 .player-controls {
@@ -353,9 +368,9 @@ button {
 }
 
 .control-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: none;
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--accent-color);
+  border: 1px solid rgba(0, 240, 255, 0.3);
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -369,7 +384,9 @@ button {
 
 .control-btn:hover:not(:disabled) {
   background: var(--accent-color);
+  color: #000;
   transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
 }
 
 .control-btn:disabled {
