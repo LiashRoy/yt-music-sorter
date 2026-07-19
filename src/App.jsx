@@ -9,7 +9,7 @@ import './index.css'
 function App() {
   const [token, setToken] = useState(() => localStorage.getItem('yt_token'))
   const [playlists, setPlaylists] = useState([])
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null)
+  const [selectedPlaylist, setSelectedPlaylist] = useState(() => localStorage.getItem('yt_last_playlist'))
   const [songs, setSongs] = useState([])
   const [loading, setLoading] = useState(false)
   const [isSortedAlphabetically, setIsSortedAlphabetically] = useState(false)
@@ -30,6 +30,7 @@ function App() {
   const logout = () => {
     setToken(null)
     localStorage.removeItem('yt_token')
+    localStorage.removeItem('yt_last_playlist')
     setPlaylists([])
     setSongs([])
     setSelectedPlaylist(null)
@@ -71,6 +72,12 @@ function App() {
         }
       })
       setPlaylists(response.data.items || [])
+      
+      // Auto-load last opened playlist
+      const savedPlaylist = localStorage.getItem('yt_last_playlist')
+      if (savedPlaylist && (response.data.items || []).find(p => p.id === savedPlaylist)) {
+        fetchPlaylistItems(savedPlaylist)
+      }
     } catch (error) {
       console.error("Error fetching playlists", error)
       if (error.response && error.response.status === 401) {
@@ -87,6 +94,7 @@ function App() {
     try {
       setLoading(true)
       setSelectedPlaylist(playlistId)
+      localStorage.setItem('yt_last_playlist', playlistId)
       setIsSortedAlphabetically(false)
       let allItems = []
       let nextPageToken = ''
