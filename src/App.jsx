@@ -308,9 +308,9 @@ function App() {
 
       <div className="main-content">
         {/* Left Column */}
-        <div className="left-column" style={{ display: 'flex', flexDirection: 'column', width: '300px', height: '100%', gap: '1.5rem', flexShrink: 0, position: 'relative', zIndex: 10 }}>
+        <div className="left-column">
           {/* Sidebar */}
-          <div className="glass-panel sidebar" style={{ width: '100%', flex: 1, minHeight: 0, height: 'auto', maxHeight: 'none' }}>
+          <div className="glass-panel sidebar">
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)' }}>
             <ListMusic size={20} />
             Your Playlists
