@@ -22,7 +22,6 @@ function App() {
   const [isDragging, setIsDragging] = useState(false)
 
   const stateRef = useRef()
-  stateRef.current = { displayedSongs, playingSong, player }
 
   // Login handler
   const login = useGoogleLogin({
@@ -183,6 +182,8 @@ function App() {
       return song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query)
     })
     .sort((a, b) => a.artist.localeCompare(b.artist))
+
+  stateRef.current = { displayedSongs, playingSong, player }
 
   const handlePlaySong = (song) => {
     if (playingSong && playingSong.videoId === song.videoId) {
