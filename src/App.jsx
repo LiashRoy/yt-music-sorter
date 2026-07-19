@@ -271,7 +271,7 @@ function App() {
           className="glass-panel login-card"
         >
           <img src="./logo.png" alt="Logo" className="app-logo" style={{ width: '80px', height: '80px' }} />
-          <h1 className="gradient-text">YT Music Sorter</h1>
+          <h1 className="gradient-text">MyMusic</h1>
           <p style={{ color: 'var(--text-secondary)' }}>
             Connect your YouTube account to sort your playlists by artist alphabetically.
           </p>
