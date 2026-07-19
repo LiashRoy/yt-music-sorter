@@ -212,6 +212,7 @@ button {
 
 ::-webkit-scrollbar-track {
   background: transparent;
+  margin-block: 24px; /* Keeps the scrollbar away from the 24px border-radius corners */
 }
 
 ::-webkit-scrollbar-thumb {
