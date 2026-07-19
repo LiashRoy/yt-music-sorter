@@ -302,8 +302,10 @@ function App() {
       </header>
 
       <div className="main-content">
-        {/* Sidebar */}
-        <div className="glass-panel sidebar">
+        {/* Left Column */}
+        <div className="left-column" style={{ display: 'flex', flexDirection: 'column', width: '300px', height: '100%', gap: '1.5rem', flexShrink: 0, position: 'relative', zIndex: 10 }}>
+          {/* Sidebar */}
+          <div className="glass-panel sidebar" style={{ width: '100%', flex: 1, minHeight: 0, height: 'auto', maxHeight: 'none' }}>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)' }}>
             <ListMusic size={20} />
             Your Playlists
@@ -326,6 +328,93 @@ function App() {
               </button>
             ))
           )}
+          </div>
+          
+          {/* Custom Audio Player Modal placed inside the layout flow */}
+          <AnimatePresence>
+            {playingSong && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                drag
+                dragMomentum={false}
+                whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
+                className="player-modal"
+                style={{ cursor: 'grab', touchAction: 'none', willChange: 'transform' }}
+              >
+                <div className="player-content glass-panel">
+                  <button className="close-btn" onClick={() => setPlayingSong(null)}>
+                    <X size={20} />
+                  </button>
+                  
+                  {/* Hidden YouTube Iframe for Audio Only */}
+                  <div style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}>
+                    <YouTube 
+                      videoId={playingSong.videoId} 
+                      opts={{ playerVars: { autoplay: 1, controls: 0 } }}
+                      onReady={onPlayerReady}
+                      onStateChange={handleStateChange}
+                      onError={handlePlayerError}
+                    />
+                  </div>
+                  
+                  {/* High Quality Thumbnail */}
+                  <img 
+                    draggable={false}
+                    src={`https://img.youtube.com/vi/${playingSong.videoId}/hqdefault.jpg`} 
+                    alt={playingSong.title} 
+                    style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 8px 32px rgba(0, 240, 255, 0.2)', pointerEvents: 'none' }} 
+                    onError={(e) => e.target.src = playingSong.thumbnail}
+                  />
+                  
+                  <div style={{ textAlign: 'center', width: '100%', marginTop: '4px' }}>
+                    <h4 style={{ margin: 0, fontSize: '1.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{playingSong.title}</h4>
+                    <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{playingSong.artist}</p>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+                    <input 
+                      type="range" 
+                      min={0} 
+                      max={duration || 100} 
+                      value={currentTime}
+                      onMouseDown={() => setIsDragging(true)}
+                      onMouseUp={(e) => {
+                        setIsDragging(false);
+                        if (player && typeof player.seekTo === 'function') player.seekTo(parseFloat(e.target.value), true);
+                      }}
+                      onTouchStart={() => setIsDragging(true)}
+                      onTouchEnd={(e) => {
+                        setIsDragging(false);
+                        if (player && typeof player.seekTo === 'function') player.seekTo(parseFloat(e.target.value), true);
+                      }}
+                      onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+                      className="progress-bar"
+                      style={{ background: `linear-gradient(to right, var(--accent-color) ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.1) ${(currentTime / (duration || 1)) * 100}%)` }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: 500 }}>
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="player-controls">
+                    <button className="control-btn" onClick={playPrev} disabled={!hasPrev}>
+                      <SkipBack size={24} />
+                    </button>
+                    <button className="control-btn" onClick={togglePlay} style={{ width: '60px', height: '60px', background: 'var(--accent-gradient)', color: '#fff', border: 'none' }}>
+                      {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" />}
+                    </button>
+                    <button className="control-btn" onClick={playNext} disabled={!hasNext}>
+                      <SkipForward size={24} />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Main Content Area */}
@@ -421,91 +510,7 @@ function App() {
         </div>
       </div>
 
-      {/* Custom Audio Player Modal */}
-      <AnimatePresence>
-        {playingSong && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            drag
-            dragMomentum={false}
-            whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
-            className="player-modal"
-            style={{ cursor: 'grab', touchAction: 'none', willChange: 'transform' }}
-          >
-            <div className="player-content glass-panel">
-              <button className="close-btn" onClick={() => setPlayingSong(null)}>
-                <X size={20} />
-              </button>
-              
-              {/* Hidden YouTube Iframe for Audio Only */}
-              <div style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}>
-                <YouTube 
-                  videoId={playingSong.videoId} 
-                  opts={{ playerVars: { autoplay: 1, controls: 0 } }}
-                  onReady={onPlayerReady}
-                  onStateChange={handleStateChange}
-                  onError={handlePlayerError}
-                />
-              </div>
-              
-              {/* High Quality Thumbnail */}
-              <img 
-                draggable={false}
-                src={`https://img.youtube.com/vi/${playingSong.videoId}/hqdefault.jpg`} 
-                alt={playingSong.title} 
-                style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 8px 32px rgba(0, 240, 255, 0.2)', pointerEvents: 'none' }} 
-                onError={(e) => e.target.src = playingSong.thumbnail}
-              />
-              
-              <div style={{ textAlign: 'center', width: '100%', marginTop: '4px' }}>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{playingSong.title}</h4>
-                <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{playingSong.artist}</p>
-              </div>
-
-              {/* Progress Bar */}
-              <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
-                <input 
-                  type="range" 
-                  min={0} 
-                  max={duration || 100} 
-                  value={currentTime}
-                  onMouseDown={() => setIsDragging(true)}
-                  onMouseUp={(e) => {
-                    setIsDragging(false);
-                    if (player && typeof player.seekTo === 'function') player.seekTo(parseFloat(e.target.value), true);
-                  }}
-                  onTouchStart={() => setIsDragging(true)}
-                  onTouchEnd={(e) => {
-                    setIsDragging(false);
-                    if (player && typeof player.seekTo === 'function') player.seekTo(parseFloat(e.target.value), true);
-                  }}
-                  onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
-                  className="progress-bar"
-                  style={{ background: `linear-gradient(to right, var(--accent-color) ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.1) ${(currentTime / (duration || 1)) * 100}%)` }}
-                />
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: 500 }}>
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{formatTime(duration)}</span>
-                </div>
-              </div>
-              
-              <div className="player-controls">
-                <button className="control-btn" onClick={playPrev} disabled={!hasPrev}>
-                  <SkipBack size={24} />
-                </button>
-                <button className="control-btn" onClick={togglePlay} style={{ width: '60px', height: '60px', background: 'var(--accent-gradient)', color: '#fff', border: 'none' }}>
-                  {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" />}
-                </button>
-                <button className="control-btn" onClick={playNext} disabled={!hasNext}>
-                  <SkipForward size={24} />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Player moved to left column */}
     </div>
   )
 }

@@ -378,13 +378,11 @@ button {
 
 /* Custom Audio Player Modal */
 .player-modal {
-  position: fixed;
-  bottom: 2rem;
-  left: 3rem; /* Align perfectly with sidebar (app-container padding is 3rem) */
-  width: 300px; /* Match sidebar width perfectly */
+  width: 100%;
   height: auto;
   background: transparent;
   z-index: 1000;
+  flex-shrink: 0;
 }
 
 .player-content {
