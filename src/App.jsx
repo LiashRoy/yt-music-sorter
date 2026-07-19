@@ -342,11 +342,7 @@ function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                drag
-                dragMomentum={false}
-                whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
                 className="player-modal"
-                style={{ cursor: 'grab', touchAction: 'none', willChange: 'transform' }}
               >
                 <div className="player-content glass-panel">
                   <button className="close-btn" onClick={() => setPlayingSong(null)}>
@@ -506,6 +502,7 @@ function App() {
                       </motion.div>
                     ))}
                   </AnimatePresence>
+                  <div className="mobile-player-spacer" />
                 </div>
               )}
             </>

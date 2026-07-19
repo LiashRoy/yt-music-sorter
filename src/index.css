@@ -659,8 +659,10 @@ button {
     display: none;
   }
 
-  .track-list-container {
-    padding-bottom: 90px; /* Ensures the last track clears the fixed mini player */
+  .mobile-player-spacer {
+    height: 90px;
+    width: 100%;
+    flex-shrink: 0;
   }
 
   .player-modal {
@@ -703,6 +705,8 @@ button {
   }
 
   .player-controls {
+    width: auto;
+    flex-shrink: 0;
     gap: 8px;
     margin-top: 0;
   }
