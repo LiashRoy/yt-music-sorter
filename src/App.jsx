@@ -179,6 +179,21 @@ function App() {
     })
     .sort((a, b) => a.artist.localeCompare(b.artist))
 
+  const handlePlaySong = (song) => {
+    setPlayingSong(song)
+    
+    if (searchQuery) {
+      setSearchQuery('')
+      // Allow the full list to render before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(`track-${song.videoId}`)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 300)
+    }
+  }
+
   // Player Controls Logic
   const currentIndex = displayedSongs.findIndex(s => s.videoId === playingSong?.videoId)
   const hasNext = currentIndex >= 0 && currentIndex < displayedSongs.length - 1
@@ -320,6 +335,7 @@ function App() {
                   <AnimatePresence>
                     {displayedSongs.map((song, index) => (
                       <motion.div
+                        id={`track-${song.videoId}`}
                         key={song.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -327,7 +343,7 @@ function App() {
                         className="track-item"
                       >
                         <button 
-                          onClick={() => setPlayingSong(song)}
+                          onClick={() => handlePlaySong(song)}
                           className="track-play"
                           title="Play in App"
                         >
