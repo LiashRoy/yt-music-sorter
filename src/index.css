@@ -287,6 +287,18 @@ button {
   transform: scale(1.1) !important;
 }
 
+.blocked-play {
+  background: rgba(255, 50, 50, 0.1);
+  border-color: rgba(255, 50, 50, 0.3);
+  color: #ff4444;
+}
+
+.blocked-play:hover {
+  background: #ff4444;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(255, 50, 50, 0.5);
+}
+
 .thumbnail {
   width: 40px;
   height: 40px;

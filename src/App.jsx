@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Pause, Music, ListMusic, ArrowDownAZ, LogIn, X, SkipBack, SkipForward, LogOut, Search } from 'lucide-react'
+import { Play, Pause, Music, ListMusic, ArrowDownAZ, LogIn, X, SkipBack, SkipForward, LogOut, Search, ExternalLink } from 'lucide-react'
 import YouTube from 'react-youtube'
 import './index.css'
 
@@ -14,6 +14,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [playingSong, setPlayingSong] = useState(null)
+  const [unplayableSongs, setUnplayableSongs] = useState(new Set())
   const [player, setPlayer] = useState(null)
   const [isPlaying, setIsPlaying] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
@@ -37,6 +38,7 @@ function App() {
     setPlaylists([])
     setSongs([])
     setSelectedPlaylist(null)
+    setUnplayableSongs(new Set())
   }
 
   // Interactive Background Pointer Logic
@@ -239,6 +241,16 @@ function App() {
 
   const handlePlayerError = (e) => {
     console.warn("YouTube Player Error:", e.data);
+    
+    // Mark song as unplayable
+    if (playingSong) {
+      setUnplayableSongs(prev => {
+        const newSet = new Set(prev);
+        newSet.add(playingSong.videoId);
+        return newSet;
+      });
+    }
+
     // Error 101/150: Embedding disabled. Error 100: Video deleted/private.
     // Automatically skip to the next track when a video cannot be played.
     playNext();
@@ -357,13 +369,25 @@ function App() {
                         transition={{ duration: 0.2 }}
                         className="track-item"
                       >
-                        <button 
-                          onClick={() => handlePlaySong(song)}
-                          className="track-play"
-                          title="Play in App"
-                        >
-                          <Play size={18} fill="currentColor" />
-                        </button>
+                        {unplayableSongs.has(song.videoId) ? (
+                          <a 
+                            href={`https://www.youtube.com/watch?v=${song.videoId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="track-play blocked-play"
+                            title="Play on YouTube"
+                          >
+                            <ExternalLink size={18} />
+                          </a>
+                        ) : (
+                          <button 
+                            onClick={() => handlePlaySong(song)}
+                            className="track-play"
+                            title="Play in App"
+                          >
+                            <Play size={18} fill="currentColor" />
+                          </button>
+                        )}
                         <div className="track-number">{index + 1}</div>
                         <div className="track-title" style={{ minWidth: 0 }}>
                           {song.thumbnail ? (
@@ -371,8 +395,11 @@ function App() {
                           ) : (
                             <div className="thumbnail" style={{ background: 'rgba(255,255,255,0.1)' }} />
                           )}
-                          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {song.title}
+                          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span>{song.title}</span>
+                            {unplayableSongs.has(song.videoId) && (
+                              <span style={{ fontSize: '0.65rem', padding: '2px 6px', background: 'rgba(255,50,50,0.2)', color: '#ff4444', borderRadius: '4px', border: '1px solid rgba(255,50,50,0.4)', flexShrink: 0 }}>Blocked</span>
+                            )}
                           </div>
                         </div>
                         <div className="track-artist">
