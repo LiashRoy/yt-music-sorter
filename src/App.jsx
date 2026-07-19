@@ -213,7 +213,6 @@ function App() {
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Music size={32} className="gradient-text" />
-          <h2 className="gradient-text" style={{ margin: 0 }}>YT Music Sorter</h2>
         </div>
         <button 
           onClick={logout} 
