@@ -298,8 +298,15 @@ function App() {
                         transition={{ duration: 0.2 }}
                         className="track-item"
                       >
+                        <button 
+                          onClick={() => setPlayingSong(song)}
+                          className="track-play"
+                          title="Play in App"
+                        >
+                          <Play size={18} fill="currentColor" />
+                        </button>
                         <div className="track-number">{index + 1}</div>
-                        <div className="track-title">
+                        <div className="track-title" style={{ minWidth: 0 }}>
                           {song.thumbnail ? (
                             <img src={song.thumbnail} alt="" className="thumbnail" />
                           ) : (
@@ -312,13 +319,6 @@ function App() {
                         <div className="track-artist">
                           {song.artist}
                         </div>
-                        <button 
-                          onClick={() => setPlayingSong(song)}
-                          className="track-play"
-                          title="Play in App"
-                        >
-                          <Play size={18} fill="currentColor" />
-                        </button>
                       </motion.div>
                     ))}
                   </AnimatePresence>

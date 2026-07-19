@@ -220,7 +220,8 @@ button {
 /* Track Item */
 .track-item {
   display: grid;
-  grid-template-columns: 48px 1fr 1fr 48px;
+  grid-template-columns: 40px 32px 1.5fr 1fr;
+  gap: 16px;
   align-items: center;
   padding: 12px 16px;
   border-radius: 12px;
