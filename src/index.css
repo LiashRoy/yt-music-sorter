@@ -59,6 +59,24 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+/* App Logo */
+.app-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.logo-playing {
+  animation: pulse-glow 1.5s infinite alternate;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.4)); }
+  100% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0, 240, 255, 1)); }
+}
+
 /* Base Styles */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
