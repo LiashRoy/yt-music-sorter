@@ -313,27 +313,22 @@ button {
 /* Embedded Player Modal */
 .player-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  bottom: 80px;
+  right: 32px;
+  width: 400px;
+  height: auto;
+  background: transparent;
   z-index: 1000;
 }
 
 .player-content {
-  width: 90%;
-  max-width: 800px;
+  width: 100%;
   aspect-ratio: 16 / 9;
   position: relative;
   background: #000;
   padding: 0;
   overflow: visible;
+  border-radius: 16px;
 }
 
 .close-btn {
