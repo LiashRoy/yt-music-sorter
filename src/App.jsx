@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -20,6 +20,9 @@ function App() {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+
+  const stateRef = useRef()
+  stateRef.current = { displayedSongs, playingSong, player }
 
   // Login handler
   const login = useGoogleLogin({
@@ -215,8 +218,10 @@ function App() {
   const hasPrev = currentIndex > 0
 
   const playNext = () => {
-    if (hasNext) {
-      const nextSong = displayedSongs[currentIndex + 1];
+    const { displayedSongs, playingSong, player } = stateRef.current;
+    const idx = displayedSongs.findIndex(s => s.videoId === playingSong?.videoId);
+    if (idx >= 0 && idx < displayedSongs.length - 1) {
+      const nextSong = displayedSongs[idx + 1];
       setPlayingSong(nextSong);
       // Imperatively load the video to bypass React background tab throttling
       if (player && typeof player.loadVideoById === 'function') {
@@ -226,8 +231,10 @@ function App() {
   }
 
   const playPrev = () => {
-    if (hasPrev) {
-      const prevSong = displayedSongs[currentIndex - 1];
+    const { displayedSongs, playingSong, player } = stateRef.current;
+    const idx = displayedSongs.findIndex(s => s.videoId === playingSong?.videoId);
+    if (idx > 0) {
+      const prevSong = displayedSongs[idx - 1];
       setPlayingSong(prevSong);
       if (player && typeof player.loadVideoById === 'function') {
         player.loadVideoById(prevSong.videoId);
