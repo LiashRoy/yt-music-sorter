@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Music, ListMusic, ArrowDownAZ, LogIn, X, SkipBack, SkipForward, LogOut } from 'lucide-react'
+import { Play, Pause, Music, ListMusic, ArrowDownAZ, LogIn, X, SkipBack, SkipForward, LogOut } from 'lucide-react'
+import YouTube from 'react-youtube'
 import './index.css'
 
 function App() {
@@ -12,7 +13,9 @@ function App() {
   const [songs, setSongs] = useState([])
   const [loading, setLoading] = useState(false)
   const [isSortedAlphabetically, setIsSortedAlphabetically] = useState(false)
-  const [playingVideoId, setPlayingVideoId] = useState(null)
+  const [playingSong, setPlayingSong] = useState(null)
+  const [player, setPlayer] = useState(null)
+  const [isPlaying, setIsPlaying] = useState(true)
 
   // Login handler
   const login = useGoogleLogin({
@@ -144,16 +147,38 @@ function App() {
   })
 
   // Player Controls Logic
-  const currentIndex = displayedSongs.findIndex(s => s.videoId === playingVideoId)
+  const currentIndex = displayedSongs.findIndex(s => s.videoId === playingSong?.videoId)
   const hasNext = currentIndex >= 0 && currentIndex < displayedSongs.length - 1
   const hasPrev = currentIndex > 0
 
   const playNext = () => {
-    if (hasNext) setPlayingVideoId(displayedSongs[currentIndex + 1].videoId)
+    if (hasNext) setPlayingSong(displayedSongs[currentIndex + 1])
   }
 
   const playPrev = () => {
-    if (hasPrev) setPlayingVideoId(displayedSongs[currentIndex - 1].videoId)
+    if (hasPrev) setPlayingSong(displayedSongs[currentIndex - 1])
+  }
+  
+  const onPlayerReady = (event) => {
+    setPlayer(event.target)
+  }
+
+  const togglePlay = () => {
+    if (player) {
+      if (isPlaying) {
+        player.pauseVideo()
+        setIsPlaying(false)
+      } else {
+        player.playVideo()
+        setIsPlaying(true)
+      }
+    }
+  }
+
+  const handleStateChange = (e) => {
+    if (e.data === 1) setIsPlaying(true) // Playing
+    if (e.data === 2) setIsPlaying(false) // Paused
+    if (e.data === 0) playNext() // Ended -> Autoplay next
   }
 
   // Render Login Screen if not authenticated
@@ -280,7 +305,7 @@ function App() {
                           {song.artist}
                         </div>
                         <button 
-                          onClick={() => setPlayingVideoId(song.videoId)}
+                          onClick={() => setPlayingSong(song)}
                           className="track-play"
                           title="Play in App"
                         >
@@ -302,32 +327,49 @@ function App() {
         </div>
       </div>
 
-      {/* Embedded Player Modal */}
+      {/* Custom Audio Player Modal */}
       <AnimatePresence>
-        {playingVideoId && (
+        {playingSong && (
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             className="player-modal"
           >
-            <div className="player-content glass-panel">
-              <button className="close-btn" onClick={() => setPlayingVideoId(null)}>
-                <X size={24} />
+            <div className="player-content glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+              <button className="close-btn" style={{ top: 12, right: 12, background: 'rgba(0,0,0,0.5)' }} onClick={() => setPlayingSong(null)}>
+                <X size={20} />
               </button>
-              <iframe 
-                width="100%" 
-                height="100%" 
-                src={`https://www.youtube.com/embed/${playingVideoId}?autoplay=1`}
-                title="YouTube video player" 
-                frameBorder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowFullScreen
-              ></iframe>
               
-              <div className="player-controls">
+              {/* Hidden YouTube Iframe for Audio Only */}
+              <div style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}>
+                <YouTube 
+                  videoId={playingSong.videoId} 
+                  opts={{ playerVars: { autoplay: 1, controls: 0 } }}
+                  onReady={onPlayerReady}
+                  onStateChange={handleStateChange}
+                />
+              </div>
+              
+              {/* High Quality Thumbnail from snippet or highres fallback if available, youtube hqdefault usually works */}
+              <img 
+                src={`https://img.youtube.com/vi/${playingSong.videoId}/hqdefault.jpg`} 
+                alt={playingSong.title} 
+                style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 8px 32px rgba(0, 240, 255, 0.2)' }} 
+                onError={(e) => e.target.src = playingSong.thumbnail}
+              />
+              
+              <div style={{ textAlign: 'center', width: '100%', marginTop: '4px' }}>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{playingSong.title}</h4>
+                <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{playingSong.artist}</p>
+              </div>
+              
+              <div className="player-controls" style={{ position: 'relative', bottom: 'auto', marginTop: '8px' }}>
                 <button className="control-btn" onClick={playPrev} disabled={!hasPrev}>
                   <SkipBack size={24} />
+                </button>
+                <button className="control-btn" onClick={togglePlay} style={{ width: '60px', height: '60px', background: 'var(--accent-gradient)', color: '#fff', border: 'none' }}>
+                  {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" />}
                 </button>
                 <button className="control-btn" onClick={playNext} disabled={!hasNext}>
                   <SkipForward size={24} />

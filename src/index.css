@@ -310,12 +310,12 @@ button {
   to { transform: rotate(360deg); }
 }
 
-/* Embedded Player Modal */
+/* Custom Audio Player Modal */
 .player-modal {
   position: fixed;
-  bottom: 80px;
+  bottom: 32px;
   right: 32px;
-  width: 400px;
+  width: 340px;
   height: auto;
   background: transparent;
   z-index: 1000;
@@ -323,12 +323,9 @@ button {
 
 .player-content {
   width: 100%;
-  aspect-ratio: 16 / 9;
   position: relative;
-  background: #000;
-  padding: 0;
-  overflow: visible;
-  border-radius: 16px;
+  background: var(--glass-bg);
+  border-radius: 24px;
 }
 
 .close-btn {
