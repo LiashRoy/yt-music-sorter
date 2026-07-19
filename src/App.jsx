@@ -295,7 +295,7 @@ function App() {
         </div>
         <button 
           onClick={logout} 
-          style={{ background: 'transparent', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem' }}
+          className="btn-outline"
         >
           <LogOut size={16} /> Logout
         </button>
