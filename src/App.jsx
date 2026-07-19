@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Pause, Music, ListMusic, ArrowDownAZ, LogIn, X, SkipBack, SkipForward, LogOut } from 'lucide-react'
+import { Play, Pause, Music, ListMusic, ArrowDownAZ, LogIn, X, SkipBack, SkipForward, LogOut, Search } from 'lucide-react'
 import YouTube from 'react-youtube'
 import './index.css'
 
@@ -12,7 +12,7 @@ function App() {
   const [selectedPlaylist, setSelectedPlaylist] = useState(() => localStorage.getItem('yt_last_playlist'))
   const [songs, setSongs] = useState([])
   const [loading, setLoading] = useState(false)
-  const [isSortedAlphabetically, setIsSortedAlphabetically] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [playingSong, setPlayingSong] = useState(null)
   const [player, setPlayer] = useState(null)
   const [isPlaying, setIsPlaying] = useState(true)
@@ -119,7 +119,7 @@ function App() {
       setLoading(true)
       setSelectedPlaylist(playlistId)
       localStorage.setItem('yt_last_playlist', playlistId)
-      setIsSortedAlphabetically(false)
+      setSearchQuery('')
       let allItems = []
       let nextPageToken = ''
 
@@ -171,19 +171,13 @@ function App() {
     }
   }
 
-  // Toggle sorting
-  const toggleSort = () => {
-    setIsSortedAlphabetically(!isSortedAlphabetically)
-  }
-
-  // Get displayed songs based on sort state
-  const displayedSongs = [...songs].sort((a, b) => {
-    if (isSortedAlphabetically) {
-      return a.artist.localeCompare(b.artist)
-    }
-  // Default YouTube playlist order
-    return a.position - b.position
-  })
+  // Get displayed songs based on search state and always sort by artist
+  const displayedSongs = [...songs]
+    .filter(song => {
+      const query = searchQuery.toLowerCase()
+      return song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query)
+    })
+    .sort((a, b) => a.artist.localeCompare(b.artist))
 
   // Player Controls Logic
   const currentIndex = displayedSongs.findIndex(s => s.videoId === playingSong?.videoId)
@@ -305,14 +299,16 @@ function App() {
                     {songs.length} songs
                   </p>
                 </div>
-                <button 
-                  className="btn-primary" 
-                  onClick={toggleSort}
-                  style={{ background: isSortedAlphabetically ? 'var(--accent-color)' : 'rgba(255,255,255,0.1)' }}
-                >
-                  <ArrowDownAZ size={20} />
-                  {isSortedAlphabetically ? 'Sorted by Artist' : 'Sort by Artist'}
-                </button>
+                <div style={{ position: 'relative' }}>
+                  <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Search in playlist..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                  />
+                </div>
               </div>
 
               {loading && songs.length === 0 ? (
