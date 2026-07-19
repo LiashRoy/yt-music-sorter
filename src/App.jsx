@@ -434,8 +434,8 @@ function App() {
             className="player-modal"
             style={{ cursor: 'grab', touchAction: 'none', willChange: 'transform' }}
           >
-            <div className="player-content glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-              <button className="close-btn" style={{ top: 12, right: 12, background: 'rgba(0,0,0,0.5)' }} onClick={() => setPlayingSong(null)}>
+            <div className="player-content glass-panel">
+              <button className="close-btn" onClick={() => setPlayingSong(null)}>
                 <X size={20} />
               </button>
               
@@ -474,12 +474,12 @@ function App() {
                   onMouseDown={() => setIsDragging(true)}
                   onMouseUp={(e) => {
                     setIsDragging(false);
-                    if (player) player.seekTo(parseFloat(e.target.value), true);
+                    if (player && typeof player.seekTo === 'function') player.seekTo(parseFloat(e.target.value), true);
                   }}
                   onTouchStart={() => setIsDragging(true)}
                   onTouchEnd={(e) => {
                     setIsDragging(false);
-                    if (player) player.seekTo(parseFloat(e.target.value), true);
+                    if (player && typeof player.seekTo === 'function') player.seekTo(parseFloat(e.target.value), true);
                   }}
                   onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
                   className="progress-bar"
@@ -491,7 +491,7 @@ function App() {
                 </div>
               </div>
               
-              <div className="player-controls" style={{ position: 'relative', bottom: 'auto', marginTop: '4px' }}>
+              <div className="player-controls">
                 <button className="control-btn" onClick={playPrev} disabled={!hasPrev}>
                   <SkipBack size={24} />
                 </button>

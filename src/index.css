@@ -379,9 +379,9 @@ button {
 /* Custom Audio Player Modal */
 .player-modal {
   position: fixed;
-  bottom: 32px;
-  right: 32px;
-  width: 340px;
+  bottom: 2rem;
+  left: 3rem; /* Align perfectly with sidebar (app-container padding is 3rem) */
+  width: 300px; /* Match sidebar width perfectly */
   height: auto;
   background: transparent;
   z-index: 1000;
@@ -392,13 +392,18 @@ button {
   position: relative;
   background: var(--glass-bg);
   border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 .close-btn {
   position: absolute;
-  top: -48px;
-  right: 0;
-  background: rgba(0, 240, 255, 0.1);
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.5);
   color: var(--accent-color);
   border: 1px solid rgba(0, 240, 255, 0.3);
   cursor: pointer;
@@ -408,6 +413,7 @@ button {
   justify-content: center;
   border-radius: 50%;
   transition: all 0.2s;
+  z-index: 10;
 }
 
 .close-btn:hover {
@@ -416,13 +422,12 @@ button {
 }
 
 .player-controls {
-  position: absolute;
-  bottom: -60px;
-  left: 0;
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
   gap: 16px;
+  margin-top: 4px;
 }
 
 .control-btn {
