@@ -237,6 +237,13 @@ function App() {
     if (e.data === 0) playNext() // Ended -> Autoplay next
   }
 
+  const handlePlayerError = (e) => {
+    console.warn("YouTube Player Error:", e.data);
+    // Error 101/150: Embedding disabled. Error 100: Video deleted/private.
+    // Automatically skip to the next track when a video cannot be played.
+    playNext();
+  }
+
   // Render Login Screen if not authenticated
   if (!token) {
     return (
@@ -412,6 +419,7 @@ function App() {
                   opts={{ playerVars: { autoplay: 1, controls: 0 } }}
                   onReady={onPlayerReady}
                   onStateChange={handleStateChange}
+                  onError={handlePlayerError}
                 />
               </div>
               
