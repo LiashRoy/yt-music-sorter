@@ -190,7 +190,7 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           className="glass-panel login-card"
         >
-          <img src="/logo.png" alt="Logo" className="app-logo" style={{ width: '80px', height: '80px' }} />
+          <img src="./logo.png" alt="Logo" className="app-logo" style={{ width: '80px', height: '80px' }} />
           <h1 className="gradient-text">YT Music Sorter</h1>
           <p style={{ color: 'var(--text-secondary)' }}>
             Connect your YouTube account to sort your playlists by artist alphabetically.
@@ -213,7 +213,7 @@ function App() {
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img 
-            src="/logo.png" 
+            src="./logo.png" 
             alt="Logo" 
             className={`app-logo ${playingSong && isPlaying ? 'logo-playing' : ''}`} 
           />
