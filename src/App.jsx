@@ -74,6 +74,32 @@ function App() {
     return () => clearInterval(interval);
   }, [isPlaying, player, isDragging]);
 
+  // Media Session API for Background Tab Playback
+  useEffect(() => {
+    if ('mediaSession' in navigator && playingSong) {
+      navigator.mediaSession.metadata = new window.MediaMetadata({
+        title: playingSong.title,
+        artist: playingSong.artist,
+        artwork: [
+          { src: playingSong.thumbnail || `https://img.youtube.com/vi/${playingSong.videoId}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpeg' }
+        ]
+      });
+
+      navigator.mediaSession.setActionHandler('play', () => {
+        if (stateRef.current.player && typeof stateRef.current.player.playVideo === 'function') {
+          stateRef.current.player.playVideo();
+        }
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        if (stateRef.current.player && typeof stateRef.current.player.pauseVideo === 'function') {
+          stateRef.current.player.pauseVideo();
+        }
+      });
+      navigator.mediaSession.setActionHandler('previoustrack', playPrev);
+      navigator.mediaSession.setActionHandler('nexttrack', playNext);
+    }
+  }, [playingSong]);
+
   const formatTime = (timeInSeconds) => {
     if (isNaN(timeInSeconds) || timeInSeconds === 0) return "0:00";
     const minutes = Math.floor(timeInSeconds / 60);
@@ -260,9 +286,20 @@ function App() {
   }
 
   const handleStateChange = (e) => {
-    if (e.data === 1) setIsPlaying(true) // Playing
-    if (e.data === 2) setIsPlaying(false) // Paused
-    if (e.data === 0) playNext() // Ended -> Autoplay next
+    if (e.data === 1) {
+      setIsPlaying(true)
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+    }
+    if (e.data === 2) {
+      setIsPlaying(false)
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+    }
+    if (e.data === 0) {
+      console.log("[YT Player] ENDED event fired. Auto-advancing to next track.");
+      // Background tabs can cause stale closures in react-youtube event handlers.
+      // We must call playNext which accesses the fresh stateRef.
+      playNext();
+    }
   }
 
   const handlePlayerError = (e) => {
