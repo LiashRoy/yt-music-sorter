@@ -215,11 +215,24 @@ function App() {
   const hasPrev = currentIndex > 0
 
   const playNext = () => {
-    if (hasNext) setPlayingSong(displayedSongs[currentIndex + 1])
+    if (hasNext) {
+      const nextSong = displayedSongs[currentIndex + 1];
+      setPlayingSong(nextSong);
+      // Imperatively load the video to bypass React background tab throttling
+      if (player && typeof player.loadVideoById === 'function') {
+        player.loadVideoById(nextSong.videoId);
+      }
+    }
   }
 
   const playPrev = () => {
-    if (hasPrev) setPlayingSong(displayedSongs[currentIndex - 1])
+    if (hasPrev) {
+      const prevSong = displayedSongs[currentIndex - 1];
+      setPlayingSong(prevSong);
+      if (player && typeof player.loadVideoById === 'function') {
+        player.loadVideoById(prevSong.videoId);
+      }
+    }
   }
   
   const onPlayerReady = (event) => {
