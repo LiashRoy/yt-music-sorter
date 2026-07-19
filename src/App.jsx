@@ -338,7 +338,7 @@ function App() {
             dragMomentum={false}
             whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
             className="player-modal"
-            style={{ cursor: 'grab', touchAction: 'none' }}
+            style={{ cursor: 'grab', touchAction: 'none', willChange: 'transform' }}
           >
             <div className="player-content glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
               <button className="close-btn" style={{ top: 12, right: 12, background: 'rgba(0,0,0,0.5)' }} onClick={() => setPlayingSong(null)}>
@@ -355,11 +355,12 @@ function App() {
                 />
               </div>
               
-              {/* High Quality Thumbnail from snippet or highres fallback if available, youtube hqdefault usually works */}
+              {/* High Quality Thumbnail */}
               <img 
+                draggable={false}
                 src={`https://img.youtube.com/vi/${playingSong.videoId}/hqdefault.jpg`} 
                 alt={playingSong.title} 
-                style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 8px 32px rgba(0, 240, 255, 0.2)' }} 
+                style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 8px 32px rgba(0, 240, 255, 0.2)', pointerEvents: 'none' }} 
                 onError={(e) => e.target.src = playingSong.thumbnail}
               />
               
