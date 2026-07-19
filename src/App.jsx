@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Music, ListMusic, ArrowDownAZ, LogIn, ExternalLink } from 'lucide-react'
+import { Play, Music, ListMusic, ArrowDownAZ, LogIn, ExternalLink, X } from 'lucide-react'
 import './index.css'
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
   const [songs, setSongs] = useState([])
   const [loading, setLoading] = useState(false)
   const [isSortedAlphabetically, setIsSortedAlphabetically] = useState(false)
+  const [playingVideoId, setPlayingVideoId] = useState(null)
 
   // Login handler
   const login = useGoogleLogin({
@@ -229,15 +230,13 @@ function App() {
                         <div className="track-artist">
                           {song.artist}
                         </div>
-                        <a 
-                          href={`https://music.youtube.com/watch?v=${song.videoId}&list=${selectedPlaylist}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button 
+                          onClick={() => setPlayingVideoId(song.videoId)}
                           className="track-play"
-                          title="Play on YouTube Music"
+                          title="Play in App"
                         >
                           <Play size={18} fill="currentColor" />
-                        </a>
+                        </button>
                       </motion.div>
                     ))}
                   </AnimatePresence>
@@ -253,6 +252,33 @@ function App() {
           )}
         </div>
       </div>
+
+      {/* Embedded Player Modal */}
+      <AnimatePresence>
+        {playingVideoId && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="player-modal"
+          >
+            <div className="player-content glass-panel">
+              <button className="close-btn" onClick={() => setPlayingVideoId(null)}>
+                <X size={24} />
+              </button>
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src={`https://www.youtube.com/embed/${playingVideoId}?autoplay=1`}
+                title="YouTube video player" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+              ></iframe>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
