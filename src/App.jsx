@@ -334,7 +334,11 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
+            drag
+            dragMomentum={false}
+            whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
             className="player-modal"
+            style={{ cursor: 'grab', touchAction: 'none' }}
           >
             <div className="player-content glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
               <button className="close-btn" style={{ top: 12, right: 12, background: 'rgba(0,0,0,0.5)' }} onClick={() => setPlayingSong(null)}>
