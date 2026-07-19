@@ -678,8 +678,17 @@ button {
     display: none;
   }
 
-  .main-content.has-player {
-    height: calc(100vh - 150px) !important; /* Force the entire layout to end 80px higher, physically clearing the mini player */
+  .main-content.has-player .track-list-container {
+    padding-bottom: 84px !important; /* Padding equal to player height to prevent last song from hiding */
+  }
+  
+  .content-area {
+    background: rgba(20, 25, 40, 0.6) !important;
+    border-radius: 16px 16px 0 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3) !important;
+    margin-bottom: 0 !important;
   }
 
   .player-modal {
@@ -691,9 +700,12 @@ button {
   }
   
   .player-modal .glass-panel {
-    background: rgba(10, 15, 30, 0.92); /* More opaque to block background text */
+    background: rgba(10, 15, 30, 0.95) !important; /* Solid background */
     backdrop-filter: blur(40px) saturate(200%);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6); /* Adds separation from the track list */
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.8) !important; /* Strong shadow to separate from content above */
+    border-radius: 0 !important; /* Flush with bottom */
+    border: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.2) !important; /* Distinct top border */
   }
   
   .player-content {
