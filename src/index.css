@@ -253,7 +253,8 @@ button {
 
 ::-webkit-scrollbar-track {
   background: transparent;
-  margin-block: 24px; /* Keeps the scrollbar away from the 24px border-radius corners */
+  margin-block: 24px; /* Vertical margin */
+  margin-inline: 24px; /* Horizontal margin */
 }
 
 ::-webkit-scrollbar-thumb {
@@ -617,15 +618,24 @@ button {
 
   .sidebar {
     flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 1rem;
-    gap: 1rem;
     flex: none;
+    padding: 1rem;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .sidebar-title {
+    margin-bottom: 0;
+    min-width: max-content;
   }
 
-  .sidebar h3 {
-    display: none;
+  .playlist-container {
+    flex-direction: row;
+    gap: 1rem;
+    overflow-x: auto;
+    flex: 1;
+    min-width: 0;
+    padding-bottom: 8px; /* Prevents scrollbar from clipping emojis */
   }
 
   .playlist-item {
