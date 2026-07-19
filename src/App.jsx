@@ -32,6 +32,16 @@ function App() {
     setSelectedPlaylist(null)
   }
 
+  // Interactive Background Pointer Logic
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   // Fetch Playlists when token is available
   useEffect(() => {
     if (token) {
