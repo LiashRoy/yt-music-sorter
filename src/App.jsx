@@ -181,16 +181,24 @@ function App() {
 
   const handlePlaySong = (song) => {
     setPlayingSong(song)
+    setIsPlaying(true)
+    
+    if (player && typeof player.playVideo === 'function') {
+      player.playVideo()
+    }
     
     if (searchQuery) {
-      setSearchQuery('')
-      // Allow the full list to render before scrolling
+      // Defer the heavy list render so it doesn't block the YouTube autoplay gesture token
       setTimeout(() => {
-        const element = document.getElementById(`track-${song.videoId}`)
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        }
-      }, 300)
+        setSearchQuery('')
+        // Allow the full list to render before scrolling
+        setTimeout(() => {
+          const element = document.getElementById(`track-${song.videoId}`)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        }, 150)
+      }, 50)
     }
   }
 
