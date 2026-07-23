@@ -319,13 +319,14 @@ button {
   border: 1px solid rgba(0, 240, 255, 0.4);
 }
 
-/* Equalizer bars on desktop — shown on the playing row */
+/* Equalizer bars — shown on the playing row (inside track-title cell) */
 .track-item .eq-bars {
   display: none;
   align-items: flex-end;
   gap: 2px;
   height: 16px;
   flex-shrink: 0;
+  margin-left: auto; /* Push to the right of the title flex cell */
 }
 .track-item.playing .eq-bars {
   display: flex;
@@ -830,12 +831,6 @@ button {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.3;
-  }
-
-  /* On mobile, push eq-bars to the far right of the row */
-  .eq-bars {
-    margin-left: auto;
-    padding-right: 4px;
   }
 
 

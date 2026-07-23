@@ -549,7 +549,7 @@ function App() {
                           ) : (
                             <div className="thumbnail" style={{ background: 'rgba(255,255,255,0.1)' }} />
                           )}
-                          <div style={{ overflow: 'hidden', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                          <div style={{ overflow: 'hidden', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '1px', flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
                               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{song.title}</span>
                               {unplayableSongs.has(song.videoId) && (
@@ -558,10 +558,10 @@ function App() {
                             </div>
                             <span className="track-artist-mobile">{song.artist}</span>
                           </div>
-                        </div>
-                        {/* Animated equalizer bars — shown via CSS only on .playing row */}
-                        <div className="eq-bars">
-                          <span /><span /><span />
+                          {/* Equalizer bars — inside title cell so desktop grid stays intact */}
+                          <div className="eq-bars">
+                            <span /><span /><span />
+                          </div>
                         </div>
                         <div className="track-artist">
                           {song.artist}
