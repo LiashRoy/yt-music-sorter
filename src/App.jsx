@@ -547,11 +547,14 @@ function App() {
                           ) : (
                             <div className="thumbnail" style={{ background: 'rgba(255,255,255,0.1)' }} />
                           )}
-                          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span>{song.title}</span>
-                            {unplayableSongs.has(song.videoId) && (
-                              <span style={{ fontSize: '0.65rem', padding: '2px 6px', background: 'rgba(255,50,50,0.2)', color: '#ff4444', borderRadius: '4px', border: '1px solid rgba(255,50,50,0.4)', flexShrink: 0 }}>Blocked</span>
-                            )}
+                          <div style={{ overflow: 'hidden', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
+                              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{song.title}</span>
+                              {unplayableSongs.has(song.videoId) && (
+                                <span style={{ fontSize: '0.65rem', padding: '2px 6px', background: 'rgba(255,50,50,0.2)', color: '#ff4444', borderRadius: '4px', border: '1px solid rgba(255,50,50,0.4)', flexShrink: 0 }}>Blocked</span>
+                              )}
+                            </div>
+                            <span className="track-artist-mobile">{song.artist}</span>
                           </div>
                         </div>
                         <div className="track-artist">

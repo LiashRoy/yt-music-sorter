@@ -312,6 +312,11 @@ button {
   min-width: 0; /* Forces grid to shrink below content size */
 }
 
+/* Hidden on desktop, shown only in mobile media query */
+.track-artist-mobile {
+  display: none;
+}
+
 .track-play {
   color: var(--text-primary);
   background: rgba(0, 240, 255, 0.1);
@@ -673,9 +678,52 @@ button {
     padding: 8px 12px;
   }
 
-  .track-number,
-  .track-artist {
+  .track-number {
     display: none;
+  }
+
+  /* Show artist below title in a compact stacked layout */
+  .track-artist {
+    display: none; /* Hidden in grid column — shown inline below title instead */
+  }
+
+  .track-title {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 2px !important;
+  }
+
+  .track-title > div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+
+  .track-title span:first-child {
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
+  }
+
+  /* Artist shown via data-artist attr on mobile — see JS */
+  .track-item .track-artist-mobile {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+  }
+
+  .thumbnail {
+    width: 34px;
+    height: 34px;
   }
 
   .main-content.has-player .track-list-container {
