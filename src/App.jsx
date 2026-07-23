@@ -516,6 +516,8 @@ function App() {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.2 }}
                         className={`track-item ${playingSong?.videoId === song.videoId ? 'playing' : ''}`}
+                        onClick={() => !unplayableSongs.has(song.videoId) && handlePlaySong(song)}
+                        style={{ cursor: unplayableSongs.has(song.videoId) ? 'default' : 'pointer' }}
                       >
                         {unplayableSongs.has(song.videoId) ? (
                           <a 
@@ -529,7 +531,7 @@ function App() {
                           </a>
                         ) : (
                           <button 
-                            onClick={() => handlePlaySong(song)}
+                            onClick={(e) => { e.stopPropagation(); handlePlaySong(song); }}
                             className={`track-play ${playingSong?.videoId === song.videoId ? 'active' : ''}`}
                             title={playingSong?.videoId === song.videoId && isPlaying ? "Pause" : "Play in App"}
                           >
