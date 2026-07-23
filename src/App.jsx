@@ -559,6 +559,10 @@ function App() {
                             <span className="track-artist-mobile">{song.artist}</span>
                           </div>
                         </div>
+                        {/* Animated equalizer bars — shown via CSS only on .playing row */}
+                        <div className="eq-bars">
+                          <span /><span /><span />
+                        </div>
                         <div className="track-artist">
                           {song.artist}
                         </div>
